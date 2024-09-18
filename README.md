@@ -20,6 +20,7 @@ Project structure
 └── test
     ├── java
     │   └── apiTest
+    │       ├── ParseqProCreateDeleteListsTests
     │       └── ParseqProTests
     └── resources    
 ```

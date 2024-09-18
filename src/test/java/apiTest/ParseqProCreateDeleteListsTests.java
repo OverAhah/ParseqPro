@@ -19,7 +19,7 @@ import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postReques
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParamMethod;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ParseqProCreateListsTests {
+public class ParseqProCreateDeleteListsTests {
 
     private static final String POST_END_POINT = "https://testapi2.parseq.pro/lists/create";
 
