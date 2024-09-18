@@ -1,5 +1,7 @@
 package org.ParseqPro.enteties.Response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +50,7 @@ public class ResponseData {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Resource {
         private String mutationId;
         private String mutationType;
@@ -88,6 +91,7 @@ public class ResponseData {
     @NoArgsConstructor
     public static class TherapeuticAnnotation {
         private String organizationName;
+        @JsonProperty("isPublic")
         private boolean isPublic;
         private String evidenceLevel;
         private List<String> referenceLinks;

@@ -20,9 +20,10 @@ public class RequestFactory {
                 .contentType(ContentType.JSON);
     }
 
-    public static <T> T getRequest(Class<T> type, String endPointUrl, int statusCode) {
+    public static <T> T getRequestWithQueryParam(Class<T> type, int pageZeroBasedNumber, int pageSize, String endPointUrl, int statusCode) {
         return requestSpec()
                 .when()
+                .queryParams("pageZeroBasedNumber", pageZeroBasedNumber,"pageSize", pageSize)
                 .get(endPointUrl)
                 .then().log().all()
                 .statusCode(statusCode)

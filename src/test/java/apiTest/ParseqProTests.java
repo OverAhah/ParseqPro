@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.deleteRequestWithPath;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestList;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestWithQueryParam;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.patchRequestWithBody;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParam;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +24,8 @@ public class ParseqProTests {
     private static final String POST_END_POINT = "https://testapi2.parseq.pro/lists/create";
 
     private static final String PATCH_END_POINT = "https://testapi2.parseq.pro/lists/";
+
+    private static final String MUTATIONS_END_PONT = "https://testapi2.parseq.pro/mutations";
 
     private static final String END_OF_ENDPOINT = "/mutations";
 
@@ -67,6 +70,9 @@ public class ParseqProTests {
     @Test
     @DisplayName("Get list of all known mutations with annotations")
     void testGetAllMutations() {
+        ResponseData responseData = getRequestWithQueryParam(ResponseData.class, 0, 10, MUTATIONS_END_PONT, 200);
 
+        assertAll("Все поля должны быть не пусты",
+                () -> assertNotNull(responseData.getResources().getFirst().getMutationId(), "Resources should not be empty"));
     }
 }
