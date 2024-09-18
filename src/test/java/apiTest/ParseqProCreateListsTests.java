@@ -2,7 +2,6 @@ package apiTest;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -15,7 +14,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.deleteRequestWithPath;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.deleteRequestWithPathMethod;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParam;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParamMethod;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ParseqProCreateListsTests {
@@ -39,7 +40,6 @@ public class ParseqProCreateListsTests {
 
     @ParameterizedTest
     @MethodSource("generateValidData")
-    //@Disabled("Error 500")
     @DisplayName("Create new list")
     @Order(2)
     void testCreateLists(String name) {
@@ -63,6 +63,22 @@ public class ParseqProCreateListsTests {
         postRequestWithQueryParam(name, POST_END_POINT, 201);
     }
 
+    @ParameterizedTest
+    @MethodSource("methodsDel")
+    @DisplayName("Wrong method")
+    @Order(5)
+    void testDeleteListWithWrongMethod(String method, String name) {
+        deleteRequestWithPathMethod(method, PATCH_END_POINT, name, 405);
+    }
+
+    @ParameterizedTest
+    @MethodSource("methodsPost")
+    @DisplayName("Wrong method")
+    @Order(6)
+    void testCreateListWithWrongMethod(String method, String name) {
+        postRequestWithQueryParamMethod(method, name, POST_END_POINT, 405);
+    }
+
     public static Stream<Arguments> generateValidData() {
         return Stream.of(
                 Arguments.of("1"),
@@ -78,5 +94,22 @@ public class ParseqProCreateListsTests {
                 Arguments.of(""),
                 Arguments.of(" "),
                 Arguments.of(1));
+    }
+
+    public static Stream<Arguments> methodsPost() {
+        return Stream.of(
+                Arguments.of("GET", "name"),
+                Arguments.of("POST", "name"),
+                Arguments.of("PUT", "name"),
+                Arguments.of("PATCH", "name"),
+                Arguments.of("DELETE", "name"));
+    }
+
+    public static Stream<Arguments> methodsDel() {
+        return Stream.of(
+                Arguments.of("GET", "name"),
+                Arguments.of("POST", "name"),
+                Arguments.of("PUT", "name"),
+                Arguments.of("PATCH", "name"));
     }
 }

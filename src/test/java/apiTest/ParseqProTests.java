@@ -13,11 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.ParseqPro.Restassured.generalFactory.RequestFactory.deleteRequestWithPath;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestList;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestListMethod;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestWithQueryParam;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestWithQueryParamFor500;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.getRequestWithQueryParamMethod;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.patchRequestWithBody;
+import static org.ParseqPro.Restassured.generalFactory.RequestFactory.patchRequestWithBodyMethod;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Owner("Artyom Kozak")
@@ -53,12 +55,6 @@ public class ParseqProTests {
         patchRequestWithBody(requestBody, PATCH_END_POINT, "name", END_OF_ENDPOINT, 200);
     }
 
-    @Test
-    @DisplayName("Delete list by name")
-    void testDeleteLists() {
-        deleteRequestWithPath(PATCH_END_POINT, "name", 204);
-    }
-
     @ParameterizedTest
     @MethodSource("generateValidData")
     @DisplayName("Get list of all known mutations with annotations")
@@ -71,9 +67,32 @@ public class ParseqProTests {
 
     @ParameterizedTest
     @MethodSource("generateInvalidData")
-    @DisplayName("Get list of all known mutations with annotations")
+    @DisplayName("Invalid data - Get list of all known mutations with annotations")
     void testGetAllMutationsWithInvalidData(int pageZeroBasedNumber, int pageSize) {
         getRequestWithQueryParamFor500(pageZeroBasedNumber, pageSize, MUTATIONS_END_PONT, 500);
+    }
+
+    @ParameterizedTest
+    @MethodSource("methodsPatch")
+    @DisplayName("Wrong methods - Replace mutations in list with mutations from body")
+    void testReplaceMutationWithWrongMethod(String method) {
+        List<String> requestBody = Arrays.asList("string1");
+
+        patchRequestWithBodyMethod(method, requestBody, PATCH_END_POINT, "name", END_OF_ENDPOINT, 404);
+    }
+
+    @ParameterizedTest
+    @MethodSource("methods")
+    @DisplayName("Wrong method - Get list of all known mutations with annotations")
+    void testGetAllMutationsWithWrongMethod(String method) {
+        getRequestWithQueryParamMethod(method, 1, 1, MUTATIONS_END_PONT, 405);
+    }
+
+    @ParameterizedTest
+    @MethodSource("methods")
+    @DisplayName("Wrong method - Get Lists")
+    void testGetListsWithWrongMethod(String method) {
+        getRequestListMethod(method, GET_END_POINT, 405);
     }
 
     public static Stream<Arguments> generateValidData() {
@@ -91,11 +110,28 @@ public class ParseqProTests {
     public static Stream<Arguments> generateInvalidData() {
         return Stream.of(
                 Arguments.of(-1, 0),
+                Arguments.of(-1, -1),
                 Arguments.of(0, -1),
                 Arguments.of("one", 1),
                 Arguments.of(1, "one"),
                 Arguments.of(null, 1),
                 Arguments.of(1, null)
         );
+    }
+
+    public static Stream<Arguments> methodsPatch() {
+        return Stream.of(
+                Arguments.of("GET"),
+                Arguments.of("POST"),
+                Arguments.of("PUT"),
+                Arguments.of("DELETE"));
+    }
+
+    public static Stream<Arguments> methods() {
+        return Stream.of(
+                Arguments.of("POST"),
+                Arguments.of("PUT"),
+                Arguments.of("PATCH"),
+                Arguments.of("DELETE"));
     }
 }
