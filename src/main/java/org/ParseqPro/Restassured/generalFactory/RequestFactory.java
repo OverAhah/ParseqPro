@@ -2,6 +2,7 @@ package org.ParseqPro.Restassured.generalFactory;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,8 @@ public class RequestFactory {
 
     public static RequestSpecification requestSpec() {
         return given()
-                .contentType(ContentType.JSON);
+                .contentType(ContentType.JSON)
+                .filter(new AllureRestAssured().setRequestTemplate("http-request.ftl").setResponseTemplate("http-response.ftl"));
     }
 
     public static <T> T getRequestWithQueryParam(Class<T> type, int pageZeroBasedNumber, int pageSize, String endPointUrl, int statusCode) {
@@ -39,16 +41,18 @@ public class RequestFactory {
                 .extract().as(type));
     }
 
-    public static <T> T postRequestWithQueryParam(Class<T> type, String name, String endPointUrl, int statusCode) {
+    public static Response postRequestWithQueryParam(String name, String endPointUrl, int statusCode) {
         return requestSpec()
                 .when()
                 .queryParam("name", name)
                 .log().uri()
                 .post(endPointUrl)
-                .then().log().all()
+                .then()
+                .log().all()
                 .statusCode(statusCode)
-                .extract().as(type);
+                .extract().response();
     }
+
 
     public static void patchRequestWithBody(Object body, String endPointUrl, String path, String endPointUrlEnd, int statusCode) {
         requestSpec()
@@ -65,6 +69,15 @@ public class RequestFactory {
                 .when()
                 .log().uri()
                 .delete(endPoint + path)
+                .then().log().all()
+                .statusCode(statusCode);
+    }
+
+    public static void getRequestWithQueryParamFor500(int pageZeroBasedNumber, int pageSize, String endPointUrl, int statusCode) {
+        requestSpec()
+                .when()
+                .queryParams("pageZeroBasedNumber", pageZeroBasedNumber,"pageSize", pageSize)
+                .get(endPointUrl)
                 .then().log().all()
                 .statusCode(statusCode);
     }
