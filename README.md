@@ -2,6 +2,7 @@
 Automation tests for ParseqPro
 
 Project structure
+```
 .  
 ├── main
 │   ├── java
@@ -21,3 +22,4 @@ Project structure
     │   └── apiTest
     │       └── ParseqProTests
     └── resources    
+```
