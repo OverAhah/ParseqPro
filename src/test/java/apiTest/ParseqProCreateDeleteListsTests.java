@@ -56,7 +56,7 @@ public class ParseqProCreateDeleteListsTests {
     @DisplayName("Delete list by name")
     @Order(3)
     void testDeleteListsWithInvalidData(String name) {
-        deleteRequestWithPath(PATCH_END_POINT, name, 204);
+        deleteRequestWithPath(PATCH_END_POINT, name, 404);
     }
 
     @ParameterizedTest
@@ -70,7 +70,7 @@ public class ParseqProCreateDeleteListsTests {
 
     @ParameterizedTest
     @MethodSource("methodsDel")
-    @DisplayName("Wrong method")
+    @DisplayName("Wrong method delete list")
     @Order(5)
     void testDeleteListWithWrongMethod(String method, String name) {
         deleteRequestWithPathMethod(method, PATCH_END_POINT, name, 405);
@@ -78,10 +78,18 @@ public class ParseqProCreateDeleteListsTests {
 
     @ParameterizedTest
     @MethodSource("methodsPost")
-    @DisplayName("Wrong method")
+    @DisplayName("Wrong method create list")
     @Order(6)
     void testCreateListWithWrongMethod(String method, String name) {
         postRequestWithQueryParamMethod(method, name, POST_END_POINT, 405);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateValidData")
+    @DisplayName("Delete already deleted list by name")
+    @Order(7)
+    void testDeleteDeletedLists(String name) {
+        deleteRequestWithPath(PATCH_END_POINT, name, 404);
     }
 
     public static Stream<Arguments> generateValidData() {
