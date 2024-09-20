@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id "org.gradle.test-retry" version "1.5.6"
 }
 
 group = "org.ParseqPro"
@@ -26,6 +27,15 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
-tasks.test {
+tasks.register('regress-all', Test) {
+    useJUnitPlatform {
+        includeTags("regress")
+    }
+}
+
+test {
+    retry {
+        maxRetries = 0
+    }
     useJUnitPlatform()
 }

@@ -4,6 +4,7 @@ import io.qameta.allure.Owner;
 import org.ParseqPro.enteties.Response.ResponseData;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,6 +23,8 @@ import static org.ParseqPro.Restassured.generalFactory.RequestFactory.patchReque
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.patchRequestWithBodyMethod;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag("regress")
+@DisplayName("Полученеи листов, Получение мутаций из списка, Изменение мутаций в списке")
 @Owner("Artyom Kozak")
 public class ParseqProTests {
 

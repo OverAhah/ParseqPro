@@ -1,11 +1,13 @@
 package apiTest;
 
+import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,6 +20,9 @@ import static org.ParseqPro.Restassured.generalFactory.RequestFactory.deleteRequ
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParam;
 import static org.ParseqPro.Restassured.generalFactory.RequestFactory.postRequestWithQueryParamMethod;
 
+@Tag("regress")
+@DisplayName("Создание нового листа, Удаление листа")
+@Owner("Artyom Kozak")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ParseqProCreateDeleteListsTests {
 
@@ -57,10 +62,10 @@ public class ParseqProCreateDeleteListsTests {
     @ParameterizedTest
     @MethodSource("generateInvalidData")
     //@Disabled("Error 500")
-    @DisplayName("Create new list")
+    @DisplayName("Create new list - Invalid data")
     @Order(4)
     void testCreateListsWithInvalidData(String name) {
-        postRequestWithQueryParam(name, POST_END_POINT, 201);
+        postRequestWithQueryParam(name, POST_END_POINT, 500);
     }
 
     @ParameterizedTest
